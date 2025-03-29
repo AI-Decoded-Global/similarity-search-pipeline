@@ -42,4 +42,12 @@ If you have time, we'd love to see:
 - Clear explanation of your approach.
 - Consideration of how this would work with larger datasets.
 
+## Submission Guidelines
+
+1. **Important**: Create a branch off main with the name format `firstname-lastname-submission`.
+2. Implement your solution on this branch.
+3. Make regular commits with clear messages.
+4. When finished, push your branch and create a pull request.
+5. Do not merge your PR, it will be reviewed as is.
+
 Keep it in Python and focus on making something that's both effective and easy to understand. Good luck!
