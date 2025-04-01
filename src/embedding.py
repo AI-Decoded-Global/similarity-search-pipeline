@@ -14,7 +14,7 @@ class EmbeddingGenerator:
         return self.model.encode(texts, convert_to_numpy=True)
 
 # Load and clean data once
-file_path = 'similarity-search-pipeline/data/volunteer-descriptions.csv'
+file_path = '/similarity-search-pipeline/data/volunteer-descriptions.csv'
 ids, original_texts, cleaned_texts = load_and_clean_data(file_path)
 
 model_name = "all-MiniLM-L6-v2"  

@@ -4,7 +4,7 @@ from similarity import SimilaritySearch
 from data_loader import clean_text
 import pickle
 
-with open("similarity-search-pipeline/data/embeddings.pkl", "rb") as f:
+with open("/data/embeddings.pkl", "rb") as f:
     ids, original_texts, cleaned_texts, embeddings = pickle.load(f)
 
 
