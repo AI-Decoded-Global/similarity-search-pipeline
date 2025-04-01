@@ -6,7 +6,7 @@ from data_loader import load_and_clean_data
 from embedding import EmbeddingGenerator
 
 
-file_path = "/Users/mahlatsemotsamai/Documents/volunteer_assesment/similarity-search-pipeline/data/volunteer-descriptions.csv"
+file_path = "data/volunteer-descriptions.csv"
 ids, original_texts, cleaned_texts = load_and_clean_data(file_path)
 
 model_name = "all-MiniLM-L6-v2"  
