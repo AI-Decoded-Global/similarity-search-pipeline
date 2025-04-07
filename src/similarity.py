@@ -37,7 +37,7 @@ def find_similar_descriptions(
     query: str,
     df: pd.DataFrame,
     model_name: str = 'all-MiniLM-L6-v2',
-    top_k: int = 5
+    top_k: int = 3
 ) -> pd.DataFrame:
     """
     Finds the top K most similar descriptions to a given query using cosine similarity.
