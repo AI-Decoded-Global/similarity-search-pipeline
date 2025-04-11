@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, Form, Query
 from fastapi.responses import JSONResponse
 import pandas as pd
+import time
 from io import StringIO
 
 from src.data_loader import load_and_clean_data
@@ -32,13 +33,15 @@ async def upload_csv(
     df = pd.read_csv(StringIO(content.decode("utf-8")))
 
     try:
+        start = time.time()
         df = load_and_clean_data(df)
         print(df.head())
         embeddings = generate_embeddings(df['cleaned_description'].tolist(), model_name=model_name)
         # embeddings = generate_embeddings(df['cleaned_description'].tolist())
         global engine
         engine = SimilarityEngine(df, embeddings, backend=backend)
-        return {"message": f"Loaded {len(df)} volunteer profiles using backend '{backend}'."}
+        duration = time.time() - start
+        return {"message": f"Loaded and Embedded {len(df)} volunteer profiles using backend '{backend}' in {duration:2f} seconds."}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
@@ -51,11 +54,13 @@ async def query_volunteers(
     """
     Query the most similar volunteer descriptions to the input.
     """
+    start = time.time()
     if engine is None:
         return JSONResponse(content={"error": "No volunteer data loaded. Please upload a CSV first."}, status_code=400)
 
     try:
         results = engine.query(description, top_k=top_k, model_name=model_name)
-        return {"query": description, "results": results}
+        duration = time.time() - start
+        return {"query": description, "results": results, "duration": {duration}}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
