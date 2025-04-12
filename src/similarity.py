@@ -4,7 +4,8 @@ Functions for finding similar volunteer descriptions.
 
 import numpy as np
 from typing import List, Dict
-from sklearn.metrics.pairwise import cosine_similarity
+import os
+import shutil
 import torch
 from torch.nn.functional import cosine_similarity
 
@@ -38,11 +39,23 @@ class SimilarityEngine:
             print('fiass')
 
         elif backend == "chromadb":
+            collection_name = "volunteer_embeddings"
             # pass
             if chromadb is None:
                 raise ImportError("ChromaDB is not installed.")
+            
+            # Delete existing collection if exisits
+
+            # Get list of all collections
             self.client = chromadb.Client(Settings(anonymized_telemetry=False))
-            self.collection = self.client.create_collection(name="volunteer_embeddings")
+            collections = self.client.list_collections()
+            collection_names = [col.name for col in collections]
+            if collection_name in collection_names:
+                self.client.delete_collection(name=collection_name)
+            else:
+                pass
+            
+            self.collection = self.client.create_collection(name=collection_name)
             self.collection.add(
                 embeddings=self.embeddings.tolist(),
                 ids=[str(i) for i in self.df["Volunteer_ID"].tolist()],

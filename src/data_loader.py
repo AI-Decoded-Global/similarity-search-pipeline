@@ -30,7 +30,7 @@ def translate_to_english(text, source_lang):
     
 def remove_stopwords(text):
     try:
-        nltk.data.find('/Users/m1pro/nltk_data/corpora/stopwords.zip')
+        nltk.data.find('/Users/m1pro/nltk_data/corpora/stopwords.zip') #replace [Users/m1pro] with home path
     except LookupError:
         print ('downloading nltk resources... One time download')
         nltk.download('stopwords')
@@ -43,7 +43,7 @@ def remove_stopwords(text):
 
 def lemmatize(text):
     try:
-        nltk.data.find('/Users/m1pro/nltk_data/corpora/wordnet.zip')
+        nltk.data.find('/Users/m1pro/nltk_data/corpora/wordnet.zip') #replace [Users/m1pro] with home path
     except LookupError:
         print ('downloading nltk resources... One time download')
         nltk.download('wordnet')

@@ -14,4 +14,4 @@ def get_embedding_model(model_name: str = "all-mpnet-base-v2") -> SentenceTransf
 
 def generate_embeddings(texts: List[str], model_name: str = "all-mpnet-base-v2") -> List[List[float]]:
     model = get_embedding_model(model_name)
-    return model.encode(texts, convert_to_numpy=True)
+    return model.encode(texts, convert_to_numpy=True)   

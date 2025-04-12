@@ -7,6 +7,7 @@ from io import StringIO
 from src.data_loader import load_and_clean_data
 from src.embedding import generate_embeddings
 from src.similarity import SimilarityEngine
+from src.finetuned_model import finetune_model
 
 app = FastAPI(title="Volunteer Description Matcher")
 
@@ -17,6 +18,8 @@ engine = None
 async def health_check():
     return {"status": "ok"}
 
+
+# Union[Literal["mpnet", "fine-tuned", "bert"], str] = Query("mpnet")
 @app.post("/upload/")
 async def upload_csv(
     file: UploadFile = File(...),
@@ -44,6 +47,37 @@ async def upload_csv(
         return {"message": f"Loaded and Embedded {len(df)} volunteer profiles using backend '{backend}' in {duration:2f} seconds."}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+@app.post("/finetuned_upload/")
+async def finetuned_upload_csv(
+    file: UploadFile = File(...),
+    finetuned_model_name: str = Query(),
+    backend: str = Query(default="in_memory", enum=["in_memory", "faiss", "chromadb"])
+):
+    """
+    Upload a CSV of volunteer descriptions and initialize the similarity engine.
+    """
+    if not file.filename.endswith(".csv"):
+        return JSONResponse(content={"error": "Only CSV files are supported"}, status_code=400)
+
+    content = await file.read()
+    df = pd.read_csv(StringIO(content.decode("utf-8")))
+
+    # try:
+    start = time.time()
+    df = load_and_clean_data(df)
+    print(df.head())
+    print('finetune model')
+    model_name = finetune_model(finetuned_model_name)
+    embeddings = generate_embeddings(df['cleaned_description'].tolist(), model_name=finetuned_model_name)
+    # embeddings = generate_embeddings(df['cleaned_description'].tolist())
+    global engine
+    engine = SimilarityEngine(df, embeddings, backend=backend)
+    duration = time.time() - start
+    return {"message": f"Loaded and Embedded {len(df)} volunteer profiles using backend '{backend}' in {duration:2f} seconds."}
+    # except Exception as e:
+    #     return JSONResponse(content={"error": str(e)}, status_code=500)
 
 @app.post("/query/")
 async def query_volunteers(
