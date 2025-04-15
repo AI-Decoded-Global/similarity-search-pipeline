@@ -38,7 +38,7 @@ pip install -r requirements.txt
 ### 🔹 Step 2: Start the App from the FastAPI entry point 
 
 ```bash
-uvicorn api.main:app --reload
+uvicorn app.main:app --reload
 ```
 Open `http://127.0.0.1:8000/docs` on your browser to see the Swagger UI and interract with the App
 
